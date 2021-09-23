@@ -30,9 +30,13 @@ class TwitterHandler:
     If max_results is greater than 100, it will only return 100.
     """
 
+    if keyphrase == '':
+      keyphrase = self.main_trend_topic()
+      print("Using the folowing trend topic: " + keyphrase + "\n\n")
+
     _headers = {"Authorization": self.__bearer_token}
     payload = {
-      'query': self.main_trend_topic() if keyphrase == '' else keyphrase,
+      'query': keyphrase,
       'max_results': 100 if max_results > 100 else max_results
     }
     response = requests.get('https://api.twitter.com/2/tweets/search/recent', params=payload,
@@ -43,4 +47,17 @@ class TwitterHandler:
 
 
   def main_trend_topic(self):
-    return "Arvore" # TODO: implement to get the main trending topic
+    _headers = {"Authorization": self.__bearer_token}
+    payload = {
+      'id': 23424768, # Worldwide: 1 UK: 23424975 Brazil: 23424768 Germany: 23424829 Mexico: 23424900 Canada: 23424775 United States: 23424977 New York: 2459115
+      'exclude': "%23"
+    }
+    response = requests.get('https://api.twitter.com/1.1/trends/place.json', params=payload,
+                             headers=_headers)
+
+    trend_topics = []
+    for data in response.json()[0]['trends']:
+      trend_topics.append( ( 0 if data['tweet_volume'] is None else data['tweet_volume'],
+                             data['name']) )
+
+    return trend_topics[0][1]
