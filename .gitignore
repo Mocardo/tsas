@@ -135,4 +135,4 @@ dmypy.json
 # Project
 bin/
 pyvenv.cfg
-twitter_api_key.py
+secrets/

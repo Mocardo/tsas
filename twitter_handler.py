@@ -1,12 +1,16 @@
 import requests
 import base64
-import twitter_api_key
+import json
 
 
 class TwitterHandler:
   def __init__(self):
-    _api_key = twitter_api_key.API_KEY
-    _api_key_secret = twitter_api_key.API_KEY_SECRET
+    f = open('secrets/twitter_api_key.json')
+    _twitter_api_key = json.load(f)
+    f.close()
+
+    _api_key = _twitter_api_key.API_KEY
+    _api_key_secret = _twitter_api_key.API_KEY_SECRET
 
     _credentials = _api_key + ":" + _api_key_secret
     _credentials_base64 = base64.b64encode(_credentials.encode('ascii'))
