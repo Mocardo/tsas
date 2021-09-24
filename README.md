@@ -12,10 +12,10 @@
 
 ## Build
 ```sh
-docker build -t ocimar/csi-02-tsas .
+docker build -t tsas/csi-02-tsas .
 ```
 
 ## Run
 ```sh
-sudo docker run -ti ocimar/csi-02-tsas
+sudo docker run -ti tsas/csi-02-tsas
 ```
