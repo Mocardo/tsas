@@ -42,6 +42,9 @@ class TwitterHandler:
     response = requests.get('https://api.twitter.com/2/tweets/search/recent', params=payload,
                              headers=_headers)
 
+    if response.json()['meta']['result_count'] == 0:
+      return []  
+    
     tweets = [data['text'] for data in response.json()['data']]
     return tweets
 
