@@ -131,3 +131,8 @@ dmypy.json
 # Ide
 .vscode/
 
+
+# Project
+bin/
+pyvenv.cfg
+twitter_api_key.py

@@ -2,13 +2,15 @@ from twitter_handler import TwitterHandler
 from gcp_handler import GcpHandler
 
 if __name__ == "__main__":
-  # lê input da command line, que vai ser UMA key ou a frase "TT".
-  twitter_key = input('type a keyword or "TT": ')
+  twitter_key = input('Type a subject. Leave empty to use the main trending topic: ')
 
-  # Invoca a api do twitter.
-  twitter_handler_mode = (TwitterHandler.Mode.KEYWORD if twitter_key != 'TT'
-    else TwitterHandler.Mode.TT)
-  tweets_list = TwitterHandler.get_tweets(twitter_key, mode=twitter_handler_mode)
+  # Call twiter API
+  twitter_handler = TwitterHandler()
+  tweets_list = twitter_handler.get_tweets(twitter_key)
+  
+  for tweet in tweets_list:
+    print(tweet)
+    print()
 
   # Invoca a api do google
   sentiment = GcpHandler.analyze_tweet(tweets_list)
