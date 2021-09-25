@@ -64,11 +64,14 @@ if __name__ == "__main__":
 
     #print(u'{}'.format(ana_json))
 
-    if score_mode > 0:
-      score_mode_str = 'POSITIVO'
-    elif score_mode < 0:
-      score_mode_str = 'NEGATIVO'
+    if len(sentiments) > 0:
+      if score_mode > 0:
+        score_mode_str = 'POSITIVO'
+      elif score_mode < 0:
+        score_mode_str = 'NEGATIVO'
+      else:
+        score_mode_str = 'NEUTRO'
+      
+      print("MAJORITARIAMENTE {}".format(score_mode_str))
     else:
-      score_mode_str = 'NEUTRO'
-    
-    print("MAJORITARIAMENTE {}".format(score_mode_str))
+      print("NENHUM TWEET")
