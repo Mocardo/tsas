@@ -17,5 +17,5 @@ docker build -t tsas/csi-02-tsas .
 
 ## Run
 ```sh
-sudo docker run -ti tsas/csi-02-tsas
+docker run -ti tsas/csi-02-tsas
 ```
