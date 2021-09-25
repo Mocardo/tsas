@@ -18,6 +18,12 @@ docker build -t tsas/csi-02-tsas .
 ```
 
 ## Run
+Without cache:
 ```sh
 docker run -ti tsas/csi-02-tsas
+```
+
+Saving cache:
+```
+docker run -ti -v `pwd`/caches:/usr/src/app/caches tsas/csi-02-tsas
 ```
