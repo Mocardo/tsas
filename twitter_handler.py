@@ -49,15 +49,18 @@ class TwitterHandler:
     headers = {"Authorization": self.__bearer_token}
     payload = {
       'query': keyphrase,
-      'max_results': 100 if max_results > 100 else max_results
+      'max_results': 100 if max_results > 100 else max_results,
+      'tweet.fields': 'lang'
     }
     response = requests.get('https://api.twitter.com/2/tweets/search/recent',
      params=payload, headers=headers)
 
+    #print(response.json())
+    
     if response.json()['meta']['result_count'] == 0:
       return []
     
-    tweet_list = [Tweet(data['text']) for data in response.json()['data']]
+    tweet_list = [Tweet(data['text'], data['lang']) for data in response.json()['data']]
     # TODO: add language metadata for tweets (low priority)
 
     return tweet_list

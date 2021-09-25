@@ -37,6 +37,7 @@ class GcpHandler:
         'content': tweet.text,
         'type_': language_v1.Document.Type.PLAIN_TEXT,
         'language': tweet.lang
+        #'language': None
       },
       'encoding_type': language_v1.EncodingType.UTF8
     }
