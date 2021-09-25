@@ -5,9 +5,10 @@ from typing import List
 
 
 class Tweet:
-  def __init__(self, text: str, lang: str=None):
+  def __init__(self, text: str, lang: str=None, retweet_count: int=0):
     self.text = text
     self.lang = lang
+    self.retweet_count = retweet_count
 
 
 class TwitterHandler:
@@ -35,33 +36,46 @@ class TwitterHandler:
     self.__bearer_token = "Bearer " + response.json()["access_token"]
 
 
-  def get_tweets(self, keyphrase:str='', max_results:int=10) -> List[Tweet]:
+  def get_tweets(self, keyphrase:str='') -> List[Tweet]:
     """
-    Returns a list of the last max_results tweets containing the specified
+    Returns a list of the last 10 most popular tweets containing the specified
     keyphrase. If no keyphrase is specified, it will be the main trending
     topic. If max_results is greater than 100, it will only return 100.
     """
-
+    max_results = 100
     if keyphrase == '':
       keyphrase = self.main_trend_topic()
-      print("Using the folowing trend topic: " + keyphrase + "\n\n")
+      print("Using the main trend topic: " + keyphrase + "\n\n")
 
     headers = {"Authorization": self.__bearer_token}
     payload = {
-      'query': keyphrase,
-      'max_results': 100 if max_results > 100 else max_results,
-      'tweet.fields': 'lang'
+      'q': keyphrase,
+      'count': 100 if max_results > 100 else max_results,
+      'result_type': 'popular',
+      'lang': 'pt'
     }
-    response = requests.get('https://api.twitter.com/2/tweets/search/recent',
+    # response = requests.get('https://api.twitter.com/2/search/recent',
+    #  params=payload, headers=headers)
+    response = requests.get('https://api.twitter.com/1.1/search/tweets.json',
      params=payload, headers=headers)
 
-    #print(response.json())
+    # print(response.json())
     
-    if response.json()['meta']['result_count'] == 0:
+    # V2
+    # if response.json()['meta']['result_count'] == 0:
+    #   return []
+
+    if response.json()['search_metadata']['count'] == 0:
       return []
     
-    tweet_list = [Tweet(data['text'], data['lang']) for data in response.json()['data']]
-    # TODO: add language metadata for tweets (low priority)
+    # V2
+    # tweet_list = [Tweet(data['text'], data['lang']) for data in response.json()['data']]
+
+    tweet_list = [Tweet(data['text'], data['lang'], data['retweet_count'])
+     for data in response.json()['statuses']]
+
+    # tweet_list.sort(key=lambda tweet: tweet.retweet_count, reverse=True)
+    # tweet_list = tweet_list[0:10]
 
     return tweet_list
 

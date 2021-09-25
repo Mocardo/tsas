@@ -20,18 +20,20 @@ class GcpHandler:
     tweets_analysis = [] # Will store the function output
     
     for tweet in tweet_list:
-      response = self._call_api(tweet)
+      if tweet.lang in ["pt", "en", "es"]:
+        response = self._call_api(tweet)
 
-      tweets_analysis.append(TweetSentiment(
-        tweet_text=tweet.text,
-        score=response.document_sentiment.score,
-        #magnitude=response.document_sentiment.magnitude,
-        identified_lang=response.language
-      ))
+        tweets_analysis.append(TweetSentiment(
+          tweet_text=tweet.text,
+          score=response.document_sentiment.score,
+          #magnitude=response.document_sentiment.magnitude,
+          identified_lang=response.language
+        ))
 
     return tweets_analysis
       
   def _call_api(self, tweet: Tweet):
+    # print(tweet.lang)
     request = {
       'document': {
         'content': tweet.text,

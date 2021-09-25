@@ -42,16 +42,19 @@ if __name__ == "__main__":
 
     #print(u'{}'.format(sen_json))
 
-    score_mode = 0
+    score_positive = 0
+    score_negative = 0
+    score_neutral = 0
 
     for sent in sentiments:
       if sent.score > 0:
-        score_mode += 1
+        score_positive += 1
         sent.score = 'POSITIVE'
       elif sent.score < 0:
-        score_mode -= 1
+        score_negative += 1
         sent.score = 'NEGATIVE'
       else:
+        score_neutral += 1
         sent.score = 'NEUTRAL'
       
       delattr(sent, "identified_lang")
@@ -63,15 +66,10 @@ if __name__ == "__main__":
     cax.close()
 
     #print(u'{}'.format(ana_json))
-
+    total_tweets = score_positive + score_negative + score_neutral
     if len(sentiments) > 0:
-      if score_mode > 0:
-        score_mode_str = 'POSITIVO'
-      elif score_mode < 0:
-        score_mode_str = 'NEGATIVO'
-      else:
-        score_mode_str = 'NEUTRO'
-      
-      print("MAJORITARIAMENTE {}".format(score_mode_str))
+      print("Percentual positivo: {}%".format(100*score_positive/total_tweets))
+      print("Percentual negativo: {}%".format(100*score_negative/total_tweets))
+      print("Percentual neutro/não identificado: {}%".format(100*score_neutral/total_tweets))
     else:
       print("NENHUM TWEET")
