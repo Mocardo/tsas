@@ -1,6 +1,8 @@
 # Twitter Sentiment Analyzer Service
 
-> ⚠️ You will need a Twitter API key placed in a secrets/twitter_api_key.json file like below:
+A containerized service for inferring the sentiments of tweets by topic.
+
+> ⚠️ You will need a [Twitter API key](https://developer.twitter.com/en/docs/twitter-api/getting-started/getting-access-to-the-twitter-api) placed in a `secrets/twitter_api_key.json` file like below:
 > ```json
 > {
 >   "API_KEY": "<your twitter api key>",
@@ -8,7 +10,7 @@
 > }
 > ```
 
-> ⚠️ You will also need to generate your own Google Cloud key as shown at https://cloud.google.com/natural-language/docs/setup, put the resulting file in secrets folder as well.
+> ⚠️ You will also need to [generate your own Google Cloud key](https://cloud.google.com/natural-language/docs/setup) and put the resulting json file in the secrets folder as well.
 
 ## Build
 ```sh
