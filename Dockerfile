@@ -3,7 +3,7 @@ ENV GOOGLE_APPLICATION_CREDENTIALS="/usr/src/app/secrets/csi-02-tsas-b3813428de3
 
 # Install python/pip
 RUN apt update
-RUN apt upgrade
+RUN apt upgrade -y
 RUN apt install python3
 RUN apt install python3-pip
 #
