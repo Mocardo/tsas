@@ -4,8 +4,16 @@ from datetime import datetime
 import json
 
 # para entregar, setar as duas como False
+CACHE_FOLDER = 'caches'
 GCP_DEBUG = False
 TWI_DEBUG = False
+
+def cache_json(obj, fname_beg):
+  obj_str = json.dumps(obj, indent=2, default=lambda o: o.__dict__)
+  path = CACHE_FOLDER + f'/{fname_beg}_{datetime.now()}.json'
+  cax = open(path, 'w')
+  cax.write(obj_str)
+  cax.close()
 
 if __name__ == "__main__":
   # Caso estejamos debugando somente uma api, melhor não chamar a outra pra
@@ -16,13 +24,7 @@ if __name__ == "__main__":
     twitter_handler = TwitterHandler()
     tweet_list = twitter_handler.get_tweets(twitter_key)
     
-    tl_json = json.dumps(tweet_list, indent=2, default=lambda obj: obj.__dict__)
-    
-    cax = open(f'caches/tweets_{datetime.now()}.json', 'w')
-    cax.write(tl_json)
-    cax.close()
-
-    #print(u'{}'.format(tl_json))
+    cache_json(tweet_list, 'tweets')
 
   else:
     cax = open('caches/tweets.json', 'r')
@@ -34,12 +36,8 @@ if __name__ == "__main__":
     # Invoca a api do google
     sentiments = gcp_handler.analyze_tweets(tweet_list)
 
-    sen_json = json.dumps(sentiments, indent=2, default=lambda obj: obj.__dict__)
+    cache_json(sentiments, 'tweet_sentiments')
     
-    cax = open(f'caches/tweet_sentiments_{datetime.now()}.json', 'w')
-    cax.write(sen_json)
-    cax.close()
-
     #print(u'{}'.format(sen_json))
 
     score_positive = 0
@@ -59,14 +57,11 @@ if __name__ == "__main__":
       
       delattr(sent, "identified_lang")
     
-    ana_json = json.dumps(sentiments, indent=2, default=lambda obj: obj.__dict__)
-
-    cax = open(f'caches/analysis_{datetime.now()}.json', 'w')
-    cax.write(ana_json)
-    cax.close()
+    cache_json(sentiments, 'analysis')
 
     #print(u'{}'.format(ana_json))
     total_tweets = score_positive + score_negative + score_neutral
+    
     if len(sentiments) > 0:
       print("Percentual positivo: {}%".format(100*score_positive/total_tweets))
       print("Percentual negativo: {}%".format(100*score_negative/total_tweets))
