@@ -9,3 +9,6 @@ def cache_json(obj, fname_beg):
   cax = open(path, 'w')
   cax.write(obj_str)
   cax.close()
+
+def sentiment_list_to_dict(ll):
+  return {i: ll[i].to_dict() for i in range(len(ll))}

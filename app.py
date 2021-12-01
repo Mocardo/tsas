@@ -19,7 +19,7 @@ def summary():
   analysis_result = call_apis(q)
   summ = make_summary(analysis_result)
 
-  return jsonify({'summary': summ})
+  return jsonify({'summary': summ.to_dict()})
 
 @app.route('/api/list')
 def list():
@@ -30,7 +30,7 @@ def list():
 
   analysis_result = call_apis(q)
 
-  return jsonify({'list': analysis_result})
+  return jsonify({'list': utils.sentiment_list_to_dict(analysis_result)})
     
 @app.route('/api/sumlist')
 def summary_and_list():
@@ -42,7 +42,7 @@ def summary_and_list():
   analysis_result = call_apis(q)
   summ = make_summary(analysis_result)
 
-  return jsonify({'list': analysis_result, 'summary': summ})
+  return jsonify({'list': utils.sentiment_list_to_dict(analysis_result), 'summary': summ.to_dict()})
 
 def query_invalida() -> Tuple[str, int]:
   return "query invalida" , 400

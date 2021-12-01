@@ -20,6 +20,8 @@ class TweetSentiment:
       self.sentiment = NEGATIVE_LABEL
     else:
       self.sentiment = NEUTRAL_LABEL
+  def to_dict(self):
+    return self.__dict__
 
 
 class AnalysisSummary:
@@ -27,6 +29,9 @@ class AnalysisSummary:
     self.positive_percent = pos_percent
     self.negative_percent = neg_percent
     self.neutral_percent = ntr_percent
+  def to_dict(self):
+        return self.__dict__
+
 
 
 class GcpHandler:
