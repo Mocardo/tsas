@@ -14,7 +14,7 @@ api = Api(app)
 
 @api.route('/api/summary/<topic>')
 class summary(Resource):
-  def get(self, topic):
+  def get(self, topic = ""):
     # q = request.args.get('q', None)
     # if q is None:
     #     return query_invalida()
@@ -29,7 +29,7 @@ class summary(Resource):
 
 @api.route('/api/list/<topic>')
 class list(Resource):
-  def get(self, topic):
+  def get(self, topic = ""):
     # q = request.args.get('q', None)
     # if q is None:
     #     return query_invalida()
@@ -43,7 +43,7 @@ class list(Resource):
 
 @api.route('/api/sumlist/<topic>')
 class summary_and_list(Resource):
-  def get(self, topic):
+  def get(self, topic = ""):
     # q = request.args.get('q', None)
     # if q is None:
     #     return query_invalida()
