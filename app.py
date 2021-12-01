@@ -16,12 +16,15 @@ ns = api.namespace('api', description='Default API')
 
 @ns.route('/summary', defaults={'topic': ""},
             doc={'description': 'Get the sentiment analysis summary of the #1 Trend Topic.'})
-@ns.route('/summary/<topic>',
+@ns.route('/summary/<path:topic>',
             doc={'description': 'Get the sentiment analysis summary of a given topic.'})
 class summary(Resource):
   @ns.response(200, 'Success')
   @ns.response(400, 'Invalid query')
   def get(self, topic):
+    if '/' in topic:
+      return 'Invalid query', 400
+
     topic = topic.strip()
 
     analysis_result, top  = call_apis(topic)
@@ -33,12 +36,15 @@ class summary(Resource):
 
 @ns.route('/list', defaults={'topic': ""},
             doc={'description': 'Get a list of tweets, with their sentiment analysis, for the #1 Trend Topic.'})
-@ns.route('/list/<topic>',
+@ns.route('/list/<path:topic>',
             doc={'description': 'Get a list of tweets, with their sentiment analysis, for a given topic.'})
 class list(Resource):
   @ns.response(200, 'Success')
   @ns.response(400, 'Invalid query')
   def get(self, topic):
+    if '/' in topic:
+      return 'Invalid query', 400
+
     topic = topic.strip()
 
     analysis_result, top = call_apis(topic)
@@ -49,14 +55,17 @@ class list(Resource):
 
 @ns.route('/sumlist', defaults={'topic': ""},
             doc={'description': 'Get a list of tweets, with their sentiment analysis, and a summary for the #1 Trend Topic.'})
-@ns.route('/sumlist/<topic>',
+@ns.route('/sumlist/<path:topic>',
             doc={'description': 'Get a list of tweets, with their sentiment analysis, and a summary for a given topic.'})
 class summary_and_list(Resource):
   @ns.response(200, 'Success')
   @ns.response(400, 'Invalid query')
   def get(self, topic):
+    if '/' in topic:
+      return 'Invalid query', 400
+
     topic = topic.strip()
-    
+
     analysis_result, top = call_apis(topic)
     summ = make_summary(analysis_result)
 
