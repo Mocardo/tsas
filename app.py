@@ -9,42 +9,37 @@ import utils
 
 app = Flask(__name__)
 
-@app.route('/api/summary')
-def summary():
-  q = request.args.get('q', None)
-  if q is None:
-    return query_invalida()
-  q = escape(q)
-
-  analysis_result, topic = call_apis(q)
+@app.route('/api/summary/<topic>')
+def summary(topic):
+  analysis_result, top = call_apis(topic)
   summ = make_summary(analysis_result)
 
-  return jsonify({'topic': topic,
+  return jsonify({'topic': top,
                   'summary': summ.to_dict()})
 
-@app.route('/api/list')
-def list():
-  q = request.args.get('q', None)
-  if q is None:
-    return query_invalida()
-  q = escape(q)
+@app.route('/api/list/<topic>')
+def list(topic):
+  # q = request.args.get('q', None)
+  # if q is None:
+  #   return query_invalida()
+  # q = escape(q)
 
-  analysis_result, topic = call_apis(q)
+  analysis_result, top = call_apis(topic)
 
-  return jsonify({'topic': topic,
+  return jsonify({'topic': top,
                   'list': utils.sentiment_list_to_dict(analysis_result)})
     
-@app.route('/api/sumlist')
-def summary_and_list():
-  q = request.args.get('q', None)
-  if q is None:
-    return query_invalida()
-  q = escape(q)
+@app.route('/api/sumlist/<topic>')
+def summary_and_list(topic):
+  # q = request.args.get('q', None)
+  # if q is None:
+  #   return query_invalida()
+  # q = escape(q)
 
-  analysis_result, topic = call_apis(q)
+  analysis_result, top = call_apis(topic)
   summ = make_summary(analysis_result)
 
-  return jsonify({'topic': topic,
+  return jsonify({'topic': top,
                   'list': utils.sentiment_list_to_dict(analysis_result),
                   'summary': summ.to_dict()})
 
