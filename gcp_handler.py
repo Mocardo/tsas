@@ -2,6 +2,10 @@ from typing import List
 from twitter_handler import Tweet
 from google.cloud import language_v1
 
+POSITIVE_LABEL = 'POSITIVE'
+NEGATIVE_LABEL = 'NEGATIVE'
+NEUTRAL_LABEL = 'NEUTRAL/NOT_IDENTIFIED'
+
 
 class TweetSentiment:
   def __init__(self, tweet_text: str, score: float, #magnitude: float,
@@ -10,6 +14,24 @@ class TweetSentiment:
     self.score = score
     # self.magnitude = magnitude
     self.identified_lang = identified_lang
+    if score > 0:
+      self.sentiment = POSITIVE_LABEL
+    elif score < 0:
+      self.sentiment = NEGATIVE_LABEL
+    else:
+      self.sentiment = NEUTRAL_LABEL
+  def to_dict(self):
+    return self.__dict__
+
+
+class AnalysisSummary:
+  def __init__(self, pos_percent, neg_percent, ntr_percent):
+    self.positive_percent = pos_percent
+    self.negative_percent = neg_percent
+    self.neutral_percent = ntr_percent
+  def to_dict(self):
+        return self.__dict__
+
 
 
 class GcpHandler:

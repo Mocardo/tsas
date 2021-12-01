@@ -130,7 +130,7 @@ dmypy.json
 
 # Ide
 .vscode/
-
+caches/
 
 # Project
 bin/

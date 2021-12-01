@@ -17,4 +17,4 @@ RUN pip3 install --upgrade pip
 RUN pip3 install --upgrade google-cloud-language
 
 COPY . .
-CMD [ "python3", "./main.py" ]
+CMD ["gunicorn", "-b", "0.0.0.0:8000", "app:app"]
