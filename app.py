@@ -19,7 +19,8 @@ ns = api.namespace('api', description='Default API')
 @ns.route('/api/summary/<topic>',
             doc={'description': 'Get the sentiment analysis summary of a given topic.'})
 class summary(Resource):
-  @ns.doc("summary")
+  @ns.response(200, 'Success')
+  @ns.response(400, 'Invalid query')
   def get(self, topic):
     analysis_result, top  = call_apis(topic)
     summ = make_summary(analysis_result)
@@ -33,6 +34,8 @@ class summary(Resource):
 @ns.route('/api/list/<topic>',
             doc={'description': 'Get a list of tweets, with their sentiment analysis, for a given topic.'})
 class list(Resource):
+  @ns.response(200, 'Success')
+  @ns.response(400, 'Invalid query')
   def get(self, topic):    
     analysis_result, top = call_apis(topic)
 
@@ -45,6 +48,8 @@ class list(Resource):
 @ns.route('/api/sumlist/<topic>',
             doc={'description': 'Get a list of tweets, with their sentiment analysis, and a summary for a given topic.'})
 class summary_and_list(Resource):
+  @ns.response(200, 'Success')
+  @ns.response(400, 'Invalid query')
   def get(self, topic):    
     analysis_result, top = call_apis(topic)
     summ = make_summary(analysis_result)
@@ -55,7 +60,7 @@ class summary_and_list(Resource):
 
 
 def query_invalida() -> Tuple[str, int]:
-  return "query invalida" , 400
+  return "Invalid query" , 400
 
 def call_apis(q: str) -> Tuple[List[TweetSentiment], str]:
   twitter_handler = TwitterHandler()
