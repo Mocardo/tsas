@@ -14,9 +14,9 @@ api = Api(app, version='1.0', title='TSAS',
               Here you can find the sentiment of a given topic or even the #1 Trend Topic in Brazil.')
 ns = api.namespace('api', description='Default API')
 
-@ns.route('/api/summary', defaults={'topic': ""},
+@ns.route('/summary', defaults={'topic': ""},
             doc={'description': 'Get the sentiment analysis summary of the #1 Trend Topic.'})
-@ns.route('/api/summary/<topic>',
+@ns.route('/summary/<topic>',
             doc={'description': 'Get the sentiment analysis summary of a given topic.'})
 class summary(Resource):
   @ns.response(200, 'Success')
@@ -31,9 +31,9 @@ class summary(Resource):
                     'summary': summ.to_dict()})
 
 
-@ns.route('/api/list', defaults={'topic': ""},
+@ns.route('/list', defaults={'topic': ""},
             doc={'description': 'Get a list of tweets, with their sentiment analysis, for the #1 Trend Topic.'})
-@ns.route('/api/list/<topic>',
+@ns.route('/list/<topic>',
             doc={'description': 'Get a list of tweets, with their sentiment analysis, for a given topic.'})
 class list(Resource):
   @ns.response(200, 'Success')
@@ -47,9 +47,9 @@ class list(Resource):
                     'list': utils.sentiment_list_to_dict(analysis_result)})
 
 
-@ns.route('/api/sumlist', defaults={'topic': ""},
+@ns.route('/sumlist', defaults={'topic': ""},
             doc={'description': 'Get a list of tweets, with their sentiment analysis, and a summary for the #1 Trend Topic.'})
-@ns.route('/api/sumlist/<topic>',
+@ns.route('/sumlist/<topic>',
             doc={'description': 'Get a list of tweets, with their sentiment analysis, and a summary for a given topic.'})
 class summary_and_list(Resource):
   @ns.response(200, 'Success')
