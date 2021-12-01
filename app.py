@@ -16,10 +16,11 @@ def summary():
     return query_invalida()
   q = escape(q)
 
-  analysis_result = call_apis(q)
+  analysis_result, topic = call_apis(q)
   summ = make_summary(analysis_result)
 
-  return jsonify({'summary': summ.to_dict()})
+  return jsonify({'topic': topic,
+                  'summary': summ.to_dict()})
 
 @app.route('/api/list')
 def list():
@@ -28,9 +29,10 @@ def list():
     return query_invalida()
   q = escape(q)
 
-  analysis_result = call_apis(q)
+  analysis_result, topic = call_apis(q)
 
-  return jsonify({'list': utils.sentiment_list_to_dict(analysis_result)})
+  return jsonify({'topic': topic,
+                  'list': utils.sentiment_list_to_dict(analysis_result)})
     
 @app.route('/api/sumlist')
 def summary_and_list():
@@ -39,24 +41,26 @@ def summary_and_list():
     return query_invalida()
   q = escape(q)
 
-  analysis_result = call_apis(q)
+  analysis_result, topic = call_apis(q)
   summ = make_summary(analysis_result)
 
-  return jsonify({'list': utils.sentiment_list_to_dict(analysis_result), 'summary': summ.to_dict()})
+  return jsonify({'topic': topic,
+                  'list': utils.sentiment_list_to_dict(analysis_result),
+                  'summary': summ.to_dict()})
 
 def query_invalida() -> Tuple[str, int]:
   return "query invalida" , 400
 
-def call_apis(q: str) -> List[TweetSentiment]:
+def call_apis(q: str) -> Tuple[List[TweetSentiment], str]:
   twitter_handler = TwitterHandler()
-  tweet_list = twitter_handler.get_tweets(q)
+  tweet_list, topic = twitter_handler.get_tweets(q)
   #utils.cache_json(tweet_list, 'tweets')
 
   gcp_handler = GcpHandler()
   sentiments = gcp_handler.analyze_tweets(tweet_list)
   #utils.cache_json(sentiments, 'tweet_sentiments')
 
-  return sentiments
+  return sentiments, topic
 
 def make_summary(analysis: List[TweetSentiment]) -> Union[AnalysisSummary, None]:
   num_positive = 0

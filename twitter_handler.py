@@ -1,7 +1,7 @@
 import requests
 import base64
 import json
-from typing import List
+from typing import List, Tuple
 
 
 class Tweet:
@@ -36,11 +36,12 @@ class TwitterHandler:
     self.__bearer_token = "Bearer " + response.json()["access_token"]
 
 
-  def get_tweets(self, keyphrase:str='') -> List[Tweet]:
+  def get_tweets(self, keyphrase:str='') -> Tuple[List[Tweet], str]:
     """
-    Returns a list of the last 10 most popular tweets containing the specified
-    keyphrase. If no keyphrase is specified, it will be the main trending
-    topic. If max_results is greater than 100, it will only return 100.
+    Returns a pair with the list of the last 10 most popular tweets containing
+    the specified keyphrase and with the topic queried. If no keyphrase is
+    specified, it will be the main trending topic. If max_results is greater
+    than 100, it will only return 100.
     """
     max_results = 100
     if keyphrase == '':
@@ -77,8 +78,7 @@ class TwitterHandler:
     # tweet_list.sort(key=lambda tweet: tweet.retweet_count, reverse=True)
     # tweet_list = tweet_list[0:10]
 
-    return tweet_list
-
+    return (tweet_list, keyphrase)
 
   def main_trend_topic(self):
     headers = {"Authorization": self.__bearer_token}
