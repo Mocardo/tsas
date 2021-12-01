@@ -1,3 +1,6 @@
 build:
   docker:
     web: Dockerfile
+  config:
+    GOOGLE_SECRET_FILE: $GOOGLE_SECRET_FILE
+    TWITTER_SECRET_FILE: $TWITTER_SECRET_FILE
