@@ -3,5 +3,5 @@ charset-normalizer==2.0.6
 idna==3.2
 requests==2.26.0
 urllib3==1.26.7
-flask
-gunicorn
+Flask==2.0.2
+gunicorn==20.1.0
