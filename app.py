@@ -9,11 +9,17 @@ from twitter_handler import TwitterHandler
 import utils
 
 app = Flask(__name__)
-api = Api(app)
+api = Api(app, version='1.0', title='TSAS',
+          description='A Twitter Sentiment Analysis Service.\n\
+              Here you can find the sentiment of a given topic or even the #1 Trend Topic in Brazil.')
+ns = api.namespace('api', description='Default API')
 
-@api.route('/api/summary', defaults={'topic': ""})
-@api.route('/api/summary/<topic>')
+@ns.route('/api/summary', defaults={'topic': ""},
+            doc={'description': 'Get the sentiment analysis summary of the #1 Trend Topic.'})
+@ns.route('/api/summary/<topic>',
+            doc={'description': 'Get the sentiment analysis summary of a given topic.'})
 class summary(Resource):
+  @ns.doc("summary")
   def get(self, topic):
     analysis_result, top  = call_apis(topic)
     summ = make_summary(analysis_result)
@@ -22,8 +28,10 @@ class summary(Resource):
                     'summary': summ.to_dict()})
 
 
-@api.route('/api/list', defaults={'topic': ""})
-@api.route('/api/list/<topic>')
+@ns.route('/api/list', defaults={'topic': ""},
+            doc={'description': 'Get a list of tweets, with their sentiment analysis, for the #1 Trend Topic.'})
+@ns.route('/api/list/<topic>',
+            doc={'description': 'Get a list of tweets, with their sentiment analysis, for a given topic.'})
 class list(Resource):
   def get(self, topic):    
     analysis_result, top = call_apis(topic)
@@ -32,8 +40,10 @@ class list(Resource):
                     'list': utils.sentiment_list_to_dict(analysis_result)})
 
 
-@api.route('/api/sumlist', defaults={'topic': ""})
-@api.route('/api/sumlist/<topic>')
+@ns.route('/api/sumlist', defaults={'topic': ""},
+            doc={'description': 'Get a list of tweets, with their sentiment analysis, and a summary for the #1 Trend Topic.'})
+@ns.route('/api/sumlist/<topic>',
+            doc={'description': 'Get a list of tweets, with their sentiment analysis, and a summary for a given topic.'})
 class summary_and_list(Resource):
   def get(self, topic):    
     analysis_result, top = call_apis(topic)
