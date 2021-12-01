@@ -1,5 +1,6 @@
 from typing import List, Tuple, Union
 from flask import Flask, escape, request, jsonify
+from flask_restx import Resource, Api
 
 from gcp_handler import AnalysisSummary, GcpHandler, TweetSentiment,\
   POSITIVE_LABEL, NEGATIVE_LABEL, NEUTRAL_LABEL
@@ -8,41 +9,47 @@ from twitter_handler import TwitterHandler
 import utils
 
 app = Flask(__name__)
+api = Api(app)
 
-@app.route('/api/summary')
-def summary():
-  q = request.args.get('q', None)
-  if q is None:
-    return query_invalida()
-  q = escape(q)
+@api.route('/api/summary')
+class summary(Resource):
+  def get(self):
+    q = request.args.get('q', None)
+    if q is None:
+        return query_invalida()
+    q = escape(q)
 
-  analysis_result = call_apis(q)
-  summ = make_summary(analysis_result)
+    analysis_result = call_apis(q)
+    summ = make_summary(analysis_result)
 
-  return jsonify({'summary': summ.to_dict()})
+    return jsonify({'summary': summ.to_dict()})
 
-@app.route('/api/list')
-def list():
-  q = request.args.get('q', None)
-  if q is None:
-    return query_invalida()
-  q = escape(q)
 
-  analysis_result = call_apis(q)
+@api.route('/api/list')
+class list(Resource):
+  def get(self):
+    q = request.args.get('q', None)
+    if q is None:
+        return query_invalida()
+    q = escape(q)
 
-  return jsonify({'list': utils.sentiment_list_to_dict(analysis_result)})
-    
-@app.route('/api/sumlist')
-def summary_and_list():
-  q = request.args.get('q', None)
-  if q is None:
-    return query_invalida()
-  q = escape(q)
+    analysis_result = call_apis(q)
 
-  analysis_result = call_apis(q)
-  summ = make_summary(analysis_result)
+    return jsonify({'list': utils.sentiment_list_to_dict(analysis_result)})
 
-  return jsonify({'list': utils.sentiment_list_to_dict(analysis_result), 'summary': summ.to_dict()})
+
+@api.route('/api/sumlist')
+class summary_and_list(Resource):
+  def get(self):
+    q = request.args.get('q', None)
+    if q is None:
+        return query_invalida()
+    q = escape(q)
+
+    analysis_result = call_apis(q)
+    summ = make_summary(analysis_result)
+
+    return jsonify({'list': utils.sentiment_list_to_dict(analysis_result), 'summary': summ.to_dict()})
 
 def query_invalida() -> Tuple[str, int]:
   return "query invalida" , 400
