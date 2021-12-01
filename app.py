@@ -11,47 +11,48 @@ import utils
 app = Flask(__name__)
 api = Api(app)
 
-@api.route('/api/summary')
-class summary(Resource):
-  def get(self):
-    q = request.args.get('q', None)
-    if q is None:
-        return query_invalida()
-    q = escape(q)
 
-    analysis_result, topic = call_apis(q)
+@api.route('/api/summary/<topic>')
+class summary(Resource):
+  def get(self, topic):
+    # q = request.args.get('q', None)
+    # if q is None:
+    #     return query_invalida()
+    # q = escape(q)
+
+    analysis_result, top  = call_apis(topic)
     summ = make_summary(analysis_result)
 
-    return jsonify({'topic': topic,
+    return jsonify({'topic': top,
                     'summary': summ.to_dict()})
 
 
-@api.route('/api/list')
+@api.route('/api/list/<topic>')
 class list(Resource):
-  def get(self):
-    q = request.args.get('q', None)
-    if q is None:
-        return query_invalida()
-    q = escape(q)
+  def get(self, topic):
+    # q = request.args.get('q', None)
+    # if q is None:
+    #     return query_invalida()
+    # q = escape(q)
 
-    analysis_result, topic = call_apis(q)
+    analysis_result, top = call_apis(topic)
 
-    return jsonify({'topic': topic,
+    return jsonify({'topic': top,
                     'list': utils.sentiment_list_to_dict(analysis_result)})
 
 
-@api.route('/api/sumlist')
+@api.route('/api/sumlist/<topic>')
 class summary_and_list(Resource):
-  def get(self):
-    q = request.args.get('q', None)
-    if q is None:
-        return query_invalida()
-    q = escape(q)
+  def get(self, topic):
+    # q = request.args.get('q', None)
+    # if q is None:
+    #     return query_invalida()
+    # q = escape(q)
 
-    analysis_result, topic = call_apis(q)
+    analysis_result, top = call_apis(topic)
     summ = make_summary(analysis_result)
 
-    return jsonify({'topic': topic,
+    return jsonify({'topic': top,
                     'list': utils.sentiment_list_to_dict(analysis_result),
                     'summary': summ.to_dict()})
 
