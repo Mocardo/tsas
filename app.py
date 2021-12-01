@@ -22,6 +22,8 @@ class summary(Resource):
   @ns.response(200, 'Success')
   @ns.response(400, 'Invalid query')
   def get(self, topic):
+    topic = topic.strip()
+
     analysis_result, top  = call_apis(topic)
     summ = make_summary(analysis_result)
 
@@ -36,7 +38,9 @@ class summary(Resource):
 class list(Resource):
   @ns.response(200, 'Success')
   @ns.response(400, 'Invalid query')
-  def get(self, topic):    
+  def get(self, topic):
+    topic = topic.strip()
+
     analysis_result, top = call_apis(topic)
 
     return jsonify({'topic': top,
@@ -50,7 +54,9 @@ class list(Resource):
 class summary_and_list(Resource):
   @ns.response(200, 'Success')
   @ns.response(400, 'Invalid query')
-  def get(self, topic):    
+  def get(self, topic):
+    topic = topic.strip()
+    
     analysis_result, top = call_apis(topic)
     summ = make_summary(analysis_result)
 
