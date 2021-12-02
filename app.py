@@ -8,12 +8,20 @@ from gcp_handler import AnalysisSummary, GcpHandler, TweetSentiment,\
 from twitter_handler import TwitterHandler
 import utils
 
+# Flask and Flask_RESTX initiation
+
 app = Flask(__name__)
 api = Api(app, version='1.0', title='TSAS',
           description='A Twitter Sentiment Analysis Service.\n\
-              Here you can find out the sentiment of a given topic or even the #1 Trend Topic in Brazil.')
+              Here you can find out the sentiment of a given topic or even the #1 Trend Topic in Brazil.\
+              For more information:\
+              <ul>\
+              <li>Implementation and architecture: https://github.com/Mocardo/tsas/code_description.md</li>\
+              <li>Installing and running: https://github.com/Mocardo/tsas/</li>\
+              </ul>')
 ns = api.namespace('api', description='Default API')
 
+# Models definitions
 
 tweet_sentiment_model = ns.model("TweetSentiment", {
     'identified_lang': fields.String(description='Identified language'),
@@ -44,10 +52,13 @@ sumlist_model = ns.model("SummaryAndList", {
     'topic': fields.String(description='Desired topic')
 })
 
+# Route /api/summary/<path:topic>
+
 @ns.route('/summary', defaults={'topic': ""},
             doc={'description': 'Get the sentiment analysis summary of the #1 Trend Topic.'})
 @ns.route('/summary/<path:topic>',
             doc={'description': 'Get the sentiment analysis summary of a given topic.'})
+@ns.doc(params={'topic': 'The requested topic in string form'})
 class summary(Resource):
   @ns.response(200, 'Success', summary_model)
   @ns.response(400, 'Invalid query')
@@ -63,11 +74,13 @@ class summary(Resource):
     return jsonify({'topic': top,
                     'summary': summ.to_dict()})
 
+# Route /api/list/<path:topic>
 
 @ns.route('/list', defaults={'topic': ""},
             doc={'description': 'Get a list of tweets, with their sentiment analysis, for the #1 Trend Topic.'})
 @ns.route('/list/<path:topic>',
             doc={'description': 'Get a list of tweets, with their sentiment analysis, for a given topic.'})
+@ns.doc(params={'topic': 'The requested topic in string form'})
 class list(Resource):
   @ns.response(200, 'Success', list_model)
   @ns.response(400, 'Invalid query')
@@ -82,11 +95,13 @@ class list(Resource):
     return jsonify({'topic': top,
                     'list': utils.list_to_list_of_dicts(analysis_result)})
 
+# Route /api/sumlist/<path:topic>
 
 @ns.route('/sumlist', defaults={'topic': ""},
             doc={'description': 'Get a list of tweets, with their sentiment analysis, and a summary for the #1 Trend Topic.'})
 @ns.route('/sumlist/<path:topic>',
             doc={'description': 'Get a list of tweets, with their sentiment analysis, and a summary for a given topic.'})
+@ns.doc(params={'topic': 'The requested topic in string form'})
 class summary_and_list(Resource):
   @ns.response(200, 'Success', sumlist_model)
   @ns.response(400, 'Invalid query')
@@ -103,6 +118,7 @@ class summary_and_list(Resource):
                     'list': utils.list_to_list_of_dicts(analysis_result),
                     'summary': summ.to_dict()})
 
+# Aux functions
 
 def query_invalida() -> Tuple[str, int]:
   return "Invalid query" , 400
